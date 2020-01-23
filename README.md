@@ -17,6 +17,7 @@ mvn
 
 To run the 14.2 test, do
 ```
+git reset --hard
 git checkout 142
 rm -rf node_modules target
 mvn # This makes sure all dependencies are downloaded
@@ -32,6 +33,7 @@ mvn
 
 To run the 14.2 + webpack 5 test, do
 ```
+git reset --hard
 git checkout 142-webpack5
 rm -rf node_modules target
 mvn # This makes sure all dependencies are downloaded
