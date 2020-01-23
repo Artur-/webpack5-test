@@ -7,7 +7,6 @@
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const {BabelMultiTargetPlugin} = require('webpack-babel-multi-target-plugin');
 
 const path = require('path');
 const baseDir = path.resolve(__dirname);
@@ -112,10 +111,6 @@ module.exports = {
 
   module: {
     rules: [
-      { // Files that Babel has to transpile
-        test: /\.js$/,
-        use: [BabelMultiTargetPlugin.loader()]
-      },
       {
         test: /\.css$/i,
         use: ['raw-loader']
@@ -129,34 +124,6 @@ module.exports = {
   plugins: [
     // Generate compressed bundles
     new CompressionPlugin(),
-
-    // Transpile with babel, and produce different bundles per browser
-    new BabelMultiTargetPlugin({
-      babel: {
-        // workaround for Safari 10 scope issue (https://bugs.webkit.org/show_bug.cgi?id=159270)
-        plugins: ["@babel/plugin-transform-block-scoping"],
-
-        presetOptions: {
-          useBuiltIns: false // polyfills are provided from webcomponents-loader.js
-        }
-      },
-      targets: {
-        'es6': { // Evergreen browsers
-          browsers: [
-            // It guarantees that babel outputs pure es6 in bundle and in stats.json
-            // In the case of browsers no supporting certain feature it will be
-            // covered by the webcomponents-loader.js
-            'last 1 Chrome major versions'
-          ],
-        },
-        'es5': { // IE11
-          browsers: [
-            'ie 11'
-          ],
-          tagAssetsWithKey: true, // append a suffix to the file name
-        }
-      }
-    }),
 
     // Generates the stats file for flow `@Id` binding.
     function (compiler) {
